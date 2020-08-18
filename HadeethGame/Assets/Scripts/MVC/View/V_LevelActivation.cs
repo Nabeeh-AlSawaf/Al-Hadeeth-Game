@@ -11,7 +11,7 @@ public class V_LevelActivation : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         if (LastLevel) animator.SetTrigger("LastLevel");
 
     }
