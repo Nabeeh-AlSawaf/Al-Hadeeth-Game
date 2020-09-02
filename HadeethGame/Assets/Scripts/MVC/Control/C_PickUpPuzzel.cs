@@ -11,6 +11,8 @@ public class C_PickUpPuzzel : MonoBehaviour
     Vector3 originalScreenTargetPosition;
     Vector3 originalRigidbodyPos;
     float selectionDistance;
+    float dragingY;
+    Animator objectAn;
 
     // Start is called before the first frame update
     void Start()
@@ -27,13 +29,15 @@ public class C_PickUpPuzzel : MonoBehaviour
         {
             //Check if we are hovering over Rigidbody, if so, select it
             selectedRigidbody = GetRigidbodyFromMouseClick();
+            objectAn = selectedRigidbody.GetComponentInParent<Animator>();
+            objectAn.SetTrigger("GoUp");
+            
         }
         if (Input.GetMouseButtonUp(0) && selectedRigidbody)
         {
             //Release selected Rigidbody if there any
-            Vector3 dragingObjectypPosition = new Vector3(selectedRigidbody.position.x, selectedRigidbody.position.y - 2f, selectedRigidbody.position.z);
-            selectedRigidbody.position = Vector3.MoveTowards(selectedRigidbody.position, dragingObjectypPosition, forceAmount * Time.deltaTime);
             selectedRigidbody = null;
+            objectAn.SetTrigger("GoDown");
         }
     }
 
@@ -51,9 +55,8 @@ public class C_PickUpPuzzel : MonoBehaviour
             float distance; // the distance from the ray origin to the ray intersection of the plane
             if (plane.Raycast(ray, out distance))
             {
-                draggingObject.position = ray.GetPoint(distance); // distance along the ray
-                Vector3 dragingObjectypPosition = new Vector3(draggingObject.position.x, draggingObject.position.y + 2f, draggingObject.position.z);
-                draggingObject.position = Vector3.MoveTowards(draggingObject.position, dragingObjectypPosition, forceAmount * Time.deltaTime);
+                draggingObject.position = new Vector3( ray.GetPoint(distance).x, draggingObject.position.y, ray.GetPoint(distance).z); // distance along the ray
+               
             }
         }
     }
