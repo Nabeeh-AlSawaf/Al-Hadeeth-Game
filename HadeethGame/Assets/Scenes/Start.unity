@@ -5465,7 +5465,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 763079213}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 184.17, y: 537.3, z: 95.299}
+  m_LocalPosition: {x: 34.1, y: 16.3, z: -49.8}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 1362030144}
@@ -5487,7 +5487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 763079216}
   joystick: {fileID: 966317241}
-  speed: 6.04
+  speed: 55
   turnSmoothTime: 0.07
   gravity: -9.81
   groundCheck: {fileID: 1439798297}
@@ -9043,8 +9043,8 @@ MonoBehaviour:
   basePositions:
   - {fileID: 904487929}
   playerPosition: {fileID: 763079214}
-  dissposition: 11
-  zoomValue: 1.47
+  dissposition: 163
+  zoomValue: 1.23
 --- !u!4 &1309583312
 Transform:
   m_ObjectHideFlags: 0
@@ -9318,7 +9318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335722853}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 173.27, y: 511.19, z: 142.6}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 226585761}

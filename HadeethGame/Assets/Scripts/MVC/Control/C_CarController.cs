@@ -83,12 +83,13 @@ public class C_CarController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        MoveForward();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        MoveForward();
         MoveToPosition();
         KeyBoardTest();
     }
