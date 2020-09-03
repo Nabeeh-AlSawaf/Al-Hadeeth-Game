@@ -6,13 +6,25 @@ public class C_PickUpPuzzel : MonoBehaviour
 {
     public float forceAmount = 3;
 
-    Transform selectedRigidbody;
+    public C_PuzzleSolve puzzleSolver;
+
+    string currentPuzzle="";
+
+    string pickedArea = "";
+
+    Transform solve;
+
+    Transform puzzleClick;
+
+    Vector3 basePuzzlePosition;
+
+    Transform selectedPuzzle;
     Camera targetCamera;
-    Vector3 originalScreenTargetPosition;
-    Vector3 originalRigidbodyPos;
-    float selectionDistance;
-    float dragingY;
+
     Animator objectAn;
+    
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -28,25 +40,50 @@ public class C_PickUpPuzzel : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //Check if we are hovering over Rigidbody, if so, select it
-            selectedRigidbody = GetRigidbodyFromMouseClick();
-            objectAn = selectedRigidbody.GetComponentInParent<Animator>();
-            objectAn.SetTrigger("GoUp");
+            puzzleClick = GetPuzzelTransformFromMouseClick();
+            basePuzzlePosition = puzzleClick.parent.position;
+            if (puzzleClick)
+            {
+                currentPuzzle = puzzleClick.parent.name;
+                selectedPuzzle = puzzleClick.parent;
+                Debug.Log("selected transform" + selectedPuzzle.name);
+                objectAn = selectedPuzzle.GetComponent<Animator>();
+                objectAn.SetTrigger("GoUp");
+            }
             
         }
-        if (Input.GetMouseButtonUp(0) && selectedRigidbody)
+        if (Input.GetMouseButtonUp(0) && selectedPuzzle)
         {
             //Release selected Rigidbody if there any
-            selectedRigidbody = null;
-            objectAn.SetTrigger("GoDown");
+            if (puzzleClick)
+            {
+                Debug.Log(currentPuzzle + " " + pickedArea);
+                
+                if (solve&&currentPuzzle.Equals(pickedArea))
+                {
+                    selectedPuzzle.position = solve.position;
+                }
+                else
+                {
+                    Debug.Log("reset to base!!");
+                    selectedPuzzle.position = basePuzzlePosition;
+                }
+
+                selectedPuzzle = null;
+                objectAn.SetTrigger("GoDown");
+                puzzleClick = null;
+                basePuzzlePosition = new Vector3();
+            }
+
         }
     }
 
     void FixedUpdate()
     {
-        if (selectedRigidbody)
+        if (selectedPuzzle)
         {
             float planeY = 0;
-            Transform draggingObject = selectedRigidbody.transform;
+            Transform draggingObject = selectedPuzzle.transform;
 
             Plane plane = new Plane(Vector3.up, Vector3.up * planeY); // ground plane
 
@@ -55,25 +92,24 @@ public class C_PickUpPuzzel : MonoBehaviour
             float distance; // the distance from the ray origin to the ray intersection of the plane
             if (plane.Raycast(ray, out distance))
             {
-                draggingObject.position = new Vector3( ray.GetPoint(distance).x, draggingObject.position.y, ray.GetPoint(distance).z); // distance along the ray
+                draggingObject.position = new Vector3(ray.GetPoint(distance).x, draggingObject.position.y, ray.GetPoint(distance).z); // distance along the ray
                
             }
+            solve = puzzleSolver.CalculateDistances(draggingObject,ref pickedArea);
         }
     }
 
-    Transform GetRigidbodyFromMouseClick()
+    Transform GetPuzzelTransformFromMouseClick()
     {
         RaycastHit hitInfo = new RaycastHit();
         Ray ray = targetCamera.ScreenPointToRay(Input.mousePosition);
-        bool hit = Physics.Raycast(ray, out hitInfo);
+        bool hit = Physics.Raycast(ray, out hitInfo,100);
+        Debug.DrawRay(ray.origin, hitInfo.point,Color.green);
         if (hit)
         {
-            if (hitInfo.collider.gameObject.GetComponent<Rigidbody>())
+            if (hitInfo.collider.gameObject.GetComponentInParent<Transform>())
             {
-                selectionDistance = Vector3.Distance(ray.origin, hitInfo.point);
-                originalScreenTargetPosition = targetCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, selectionDistance));
-                originalRigidbodyPos = hitInfo.collider.transform.position;
-                return hitInfo.collider.gameObject.GetComponent<Transform>();
+                return hitInfo.collider.gameObject.GetComponentInParent<Transform>();
             }
         }
 
