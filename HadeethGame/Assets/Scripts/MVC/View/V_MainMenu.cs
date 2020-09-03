@@ -31,6 +31,7 @@ public class V_MainMenu : MonoBehaviour
     void Start()
     {
         InitializeSettings();
+        if(!GlobalVars.Equals(null))
         DontDestroyOnLoad(GlobalVars);
     }
     public void InitializeSettings()
