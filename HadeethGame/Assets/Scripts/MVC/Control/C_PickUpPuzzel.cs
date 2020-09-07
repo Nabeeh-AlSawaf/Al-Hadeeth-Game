@@ -41,9 +41,10 @@ public class C_PickUpPuzzel : MonoBehaviour
         {
             //Check if we are hovering over Rigidbody, if so, select it
             puzzleClick = GetPuzzelTransformFromMouseClick();
-            basePuzzlePosition = puzzleClick.parent.position;
+
             if (puzzleClick)
-            {
+            {            
+                basePuzzlePosition = puzzleClick.parent.position;
                 currentPuzzle = puzzleClick.parent.name;
                 selectedPuzzle = puzzleClick.parent;
                 Debug.Log("selected transform" + selectedPuzzle.name);
