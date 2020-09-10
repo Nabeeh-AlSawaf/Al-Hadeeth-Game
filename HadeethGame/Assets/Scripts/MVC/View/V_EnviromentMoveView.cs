@@ -23,7 +23,7 @@ public class V_EnviromentMoveView : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Player"))
         {
-            Debug.Log("collision on Enviroment " + gameObject.name);
+           // Debug.Log("collision on Enviroment " + gameObject.name);
 
             roadManager.MoveEnviroment();
         }
