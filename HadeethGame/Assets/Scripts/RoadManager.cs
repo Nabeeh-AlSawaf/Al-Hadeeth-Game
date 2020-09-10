@@ -40,12 +40,12 @@ public class RoadManager : MonoBehaviour
             int numberOfChildren = child.childCount;
             foreach(Transform obj in child)
             {
-                obj.gameObject.active = false;
+                obj.gameObject.SetActive(false);
             }
             int rand = Random.Range(-1, numberOfChildren);
             Debug.Log("child name is " + child.name + " rand is " + rand);
             if (rand >= 0)
-                child.GetChild(rand).gameObject.active = true;
+                child.GetChild(rand).gameObject.SetActive(true);
         }
     }
 
