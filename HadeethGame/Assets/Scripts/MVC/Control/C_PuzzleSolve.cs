@@ -4,25 +4,80 @@ using UnityEngine;
 
 public class C_PuzzleSolve : MonoBehaviour
 {
-    Transform[] Bases;
+    public Transform[] puzzles;
+    public Transform[] puzzleBases;
+    public GameObject[] cameras;
+    Transform[] bases;
+
+    Vector3[] puzzlePositions;
+    Transform[] randomPosition;
+    bool[] posMap;
 
     int baseNum;
+
+    int dificulty;
+
+    int currentPuzzleSize;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        initBases();
+        dificulty = /*GlobalVariables.puzzleDificulty*/3;
+        currentPuzzleSize = puzzles[dificulty - 1].childCount;
+        InitBases();
+        InitPuzzlePieces();
+        RandomizePuzzle();
     }
 
-    void initBases()
+    void InitPuzzlePieces()
     {
-        Transform basesParent = GameObject.Find("PuzzleBase").GetComponent<Transform>();
+        puzzles[dificulty - 1].gameObject.SetActive(true);
+        puzzleBases[dificulty - 1].gameObject.SetActive(true);
+        cameras[dificulty - 1].SetActive(true);
+        InitRandomPuzzles(currentPuzzleSize, dificulty - 1);
+    }
+
+    void InitRandomPuzzles(int puzzleSize,int dif)
+    {
+        posMap = new bool[puzzleSize];
+        randomPosition = new Transform[puzzleSize];
+        puzzlePositions = new Vector3[puzzleSize];
+        int i = 0;
+        foreach(Transform child in puzzles[dif])
+        {
+            puzzlePositions[i] = child.position;
+            randomPosition[i++] = child;
+            //Debug.Log(i + " x: " + child.position.x + " y: " + child.position.y + " z: " + child.position.z);
+
+        }
+
+    }
+
+    void RandomizePuzzle()
+    {
+        int i = 0;
+        int cnt = 0;
+        while (i<currentPuzzleSize)
+        {
+            int rand = Random.Range(0, currentPuzzleSize);
+            if (!posMap[rand]) {
+                posMap[rand] = true;
+                randomPosition[i].position = puzzlePositions[rand];
+                i++;
+            }
+        }
+    }
+
+    void InitBases()
+    {
+        Transform basesParent = puzzleBases[dificulty-1];
         baseNum = basesParent.childCount;
-        Bases = new Transform[baseNum];
+        bases = new Transform[baseNum];
         int i = 0;
         foreach (Transform child in basesParent)
         {
-            Bases[i++] = child;
+            bases[i++] = child;
             Debug.Log(i + " x: " + child.position.x + " y: " + child.position.y + " z: " + child.position.z);
         }
     }
@@ -33,20 +88,20 @@ public class C_PuzzleSolve : MonoBehaviour
         int minI = -1;
         for(int i = 0; i < baseNum; i++)
         {
-            double dist = Vector3.Distance(target.transform.position, Bases[i].transform.position);
+            double dist = Vector3.Distance(target.transform.position, bases[i].transform.position);
             if (dist <= 1f)
             {
                 minDist = dist;
                 minI = i;
             }
-            Bases[i].GetChild(0).gameObject.SetActive(false);
+            //bases[i].GetChild(0).gameObject.SetActive(false);
         }
         if (minI != -1)
         {
-            Debug.Log("closest is " + Bases[minI].name);
-            place = Bases[minI].name;
-            return Bases[minI];
-            Bases[minI].GetChild(0).gameObject.SetActive(true);
+            Debug.Log("closest is " + bases[minI].name);
+            place = bases[minI].name;
+            return bases[minI];
+            bases[minI].GetChild(0).gameObject.SetActive(true);
         }
         else
             Debug.Log("closest is none");
