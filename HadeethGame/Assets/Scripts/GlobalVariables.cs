@@ -6,6 +6,7 @@ public class GlobalVariables  : MonoBehaviour
 {
     public static Settings settings;
     public static int HadeethNumber;
+    public static Vector3 LastPosition;
 
     public static int puzzleDificulty = 1;// 1 2 or 3
 
