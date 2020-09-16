@@ -21,6 +21,8 @@ public class SpawnManager : MonoBehaviour
     [Range(1, 100)]
     public int pickableSpawnProbability = 10;
 
+    public int pickableSpawnHeight = 2;
+
     private int _numberOfSpawnPoints;
     private int _numberOfObstacles;
     private bool _spawnCoolDown=true;
@@ -70,6 +72,9 @@ public class SpawnManager : MonoBehaviour
 
             GameObject pickable = Instantiate(pickablePrefab, obstacleHolder.transform);
             pickable.transform.position = spawnPoints[spawnLocation].position;
+            Vector3 up = new Vector3(pickable.transform.position.x, 
+                pickable.transform.position.y + pickableSpawnHeight, pickable.transform.position.z);
+            pickable.transform.position = up;
             Destroy(pickable, 20f);
 
             StartCoroutine(PickableCoolDownReset());

@@ -5487,7 +5487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 763079216}
   joystick: {fileID: 966317241}
-  speed: 55
+  speed: 70
   turnSmoothTime: 0.07
   gravity: -9.81
   groundCheck: {fileID: 1439798297}
