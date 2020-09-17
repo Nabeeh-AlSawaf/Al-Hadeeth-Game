@@ -23,7 +23,7 @@ public class C_PuzzleSolve : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dificulty = /*GlobalVariables.puzzleDificulty*/3;
+        dificulty = GlobalVariables.puzzleDificulty;
         currentPuzzleSize = puzzles[dificulty - 1].childCount;
         InitBases();
         InitPuzzlePieces();

@@ -6,22 +6,25 @@ public class MoveRopeHandle : MonoBehaviour
 {
     public float forceAmount = 3;
 
-    public C_PuzzleSolve puzzleSolver;
+    public C_MatchingSolver CmatchingSolver;
+    public M_MatchingSolver MmatchingSolver;
 
+
+    public GameObject ropePrefab;
+    List<GameObject> AllRopes = new List<GameObject>();
     string currentPuzzle = "";
 
-    string pickedArea = "";
+    string solve;
+    int solves = 0;
 
-    Transform solve;
-
-    Transform puzzleClick;
+    Transform puzzleClick, StartOBJ;
 
     Vector3 basePuzzlePosition;
 
     Transform selectedPuzzle;
     Camera targetCamera;
 
-    Animator objectAn;
+  //  Animator objectAn;
 
 
 
@@ -40,12 +43,12 @@ public class MoveRopeHandle : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //Check if we are hovering over Rigidbody, if so, select it
-            puzzleClick = GetPuzzelTransformFromMouseClick();
+            puzzleClick = GetPuzzelTransformFromMouseClick(out StartOBJ);
 
             if (puzzleClick)
             {
                 basePuzzlePosition = puzzleClick.position;
-                currentPuzzle = puzzleClick.name;
+              //  currentPuzzle = puzzleClick.name;
                 selectedPuzzle = puzzleClick;
                 Debug.Log("selected transform" + selectedPuzzle.name);
            //     objectAn = selectedPuzzle.GetComponent<Animator>();
@@ -53,21 +56,31 @@ public class MoveRopeHandle : MonoBehaviour
             }
 
         }
-        if (Input.GetMouseButtonUp(0) && selectedPuzzle)
+        if (Input.GetMouseButtonUp(0) && selectedPuzzle!=null)
         {
             //Release selected Rigidbody if there any
             if (puzzleClick)
             {
-                Debug.Log(currentPuzzle + " " + pickedArea);
-
-                if (solve && currentPuzzle.Equals(pickedArea))
+            //    Debug.Log(currentPuzzle + "  sdadah   asd  " + solve);
+                if (currentPuzzle != null && solve !=null  && currentPuzzle.Equals(solve))
                 {
-                    selectedPuzzle.position = solve.position;
+                    //needs processing
+                    Vector3 pos = new Vector3();
+                    if (CmatchingSolver.getMatchingPosition(solve, out pos))
+                    { 
+                        selectedPuzzle.position = pos;
+                        Destroy(selectedPuzzle.parent.GetChild(0).GetComponent<Obi.ObiSolver>(),1f);
+                        StartOBJ.tag = "NOTAG";
+                        solves++;
+                        NextPortion();
+                    }
+
                 }
                 else
                 {
-                    Debug.Log("reset to base!!");
+                //    Debug.Log("reset to base!!");
                     selectedPuzzle.position = basePuzzlePosition;
+                    Destroy(selectedPuzzle.parent.gameObject, 1f);
                 }
 
                 selectedPuzzle = null;
@@ -96,11 +109,25 @@ public class MoveRopeHandle : MonoBehaviour
                 draggingObject.position = new Vector3(ray.GetPoint(distance).x, ray.GetPoint(distance).y, draggingObject.position.z); // distance along the ray
 
             }
-     //       solve = puzzleSolver.CalculateDistances(draggingObject, ref pickedArea);
+            solve = MatchingSolver.currentMatch;
         }
     }
 
-    Transform GetPuzzelTransformFromMouseClick()
+    public void NextPortion()
+    {
+        if (solves >= 4)
+        {
+            MmatchingSolver.AnimateAll();
+            foreach (var obj in AllRopes)
+            {
+                Destroy(obj);
+            }
+            AllRopes.Clear();
+            MmatchingSolver.initMatching();
+            solves = 0;
+        }
+    }
+    Transform GetPuzzelTransformFromMouseClick(out Transform startobj)
     {
         RaycastHit hitInfo = new RaycastHit();
         Ray ray = targetCamera.ScreenPointToRay(Input.mousePosition);
@@ -108,12 +135,20 @@ public class MoveRopeHandle : MonoBehaviour
         Debug.DrawRay(ray.origin, hitInfo.point, Color.green);
         if (hit)
         {
-            if (hitInfo.collider.gameObject.GetComponentInParent<Transform>())
+            startobj = hitInfo.collider.gameObject.GetComponentInParent<Transform>();
+            if (startobj && startobj.tag.Equals("Startwords"))
             {
-                return hitInfo.collider.gameObject.GetComponentInParent<Transform>();
+                Vector3 pos = new Vector3(startobj.position.x - 3.8f, startobj.position.y, startobj.position.z);
+                GameObject obj =  Instantiate(ropePrefab, pos, Quaternion.identity);
+                AllRopes.Add(obj);
+               // Debug.Log(hitInfo.collider.gameObject.GetComponentInParent<Transform>().name);
+                //Get matching name from map
+                C_MatchingSolver.MatchNames.TryGetValue(startobj.name, out currentPuzzle);
+
+                return obj.GetComponentInParent<Transform>().GetChild(1);
             }
         }
-
+        startobj = null;
         return null;
     }
 

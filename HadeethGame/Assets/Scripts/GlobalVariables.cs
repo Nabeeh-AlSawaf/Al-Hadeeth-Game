@@ -8,6 +8,6 @@ public class GlobalVariables  : MonoBehaviour
     public static int HadeethNumber;
     public static Vector3 LastPosition;
 
-    public static int puzzleDificulty = 1;// 1 2 or 3
+    public static int puzzleDificulty = 3;// 1 2 or 3
 
 }
