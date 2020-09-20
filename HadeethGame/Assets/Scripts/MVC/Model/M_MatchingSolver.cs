@@ -13,6 +13,8 @@ public class M_MatchingSolver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        C_MatchingSolver.MatchWords.Clear();
+        C_MatchingSolver.MatchNames.Clear();
         initEnds();
         initNames();
     }
