@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class RoadManager : MonoBehaviour
 {
-
+    [Header("Put in the correct order in the scene")]
     public Transform[] enviroments;
-
+    [Header("Put in the correct order in the scene")]
     public Transform[] roads;
+
+    public float roadLength;
+    public float enviromentLength;
 
     private Transform [] enviromentsRandomHolders;
 
@@ -29,7 +32,7 @@ public class RoadManager : MonoBehaviour
 
     public void MoveRoad()
     {
-        roads[currentRoad].position =new Vector3(roads[currentRoad].position.x, roads[currentRoad].position.y, roads[currentRoad].position.z+ 193.5f);
+        roads[currentRoad].position =new Vector3(roads[currentRoad].position.x, roads[currentRoad].position.y, roads[currentRoad].position.z+ roadLength);
         currentRoad = (currentRoad + 1) % roads.Length;
     }
     
@@ -52,7 +55,7 @@ public class RoadManager : MonoBehaviour
     public void MoveEnviroment()
     {
         enviroments[currentEnviroment].position = new Vector3(enviroments[currentEnviroment].position.x, 
-            enviroments[currentEnviroment].position.y, enviroments[currentEnviroment].position.z + 410f);
+            enviroments[currentEnviroment].position.y, enviroments[currentEnviroment].position.z + enviromentLength);
         InitNextEnviroment();
         currentEnviroment = (currentEnviroment + 1) % enviroments.Length;
         
