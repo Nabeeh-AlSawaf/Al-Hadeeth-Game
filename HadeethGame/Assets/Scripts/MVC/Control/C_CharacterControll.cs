@@ -15,6 +15,7 @@ public class C_CharacterControll : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
+    public Animator animator;
 
     private float turnSmoothVelocity;
 
@@ -28,7 +29,7 @@ public class C_CharacterControll : MonoBehaviour
     {
         float horizontal = joystick.Horizontal;
         float vertical = joystick.Vertical;
-
+        animator.SetFloat("Blend",(Mathf.Abs( horizontal) + Mathf.Abs(vertical))/2f);
         playerDirection = new Vector3(horizontal, 0f, vertical);
     }
 

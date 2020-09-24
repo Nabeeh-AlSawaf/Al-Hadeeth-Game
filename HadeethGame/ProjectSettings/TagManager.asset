@@ -9,6 +9,9 @@ TagManager:
   - Canvas
   - Startwords
   - NOTAG
+  - QuitButton
+  - PauseButton
+  - ContinueButton
   layers:
   - Default
   - TransparentFX

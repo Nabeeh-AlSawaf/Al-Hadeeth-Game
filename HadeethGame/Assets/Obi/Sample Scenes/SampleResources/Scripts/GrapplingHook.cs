@@ -23,7 +23,7 @@ public class GrapplingHook : MonoBehaviour {
 	public ObiRopeSection section;
 
 	private ObiRope rope;
-	private ObiRopeExtrudedRenderer renderer;
+	private new ObiRopeExtrudedRenderer renderer;
 	private ObiCurve curve;
 	private ObiSolver solver;
 	private ObiRopeCursor cursor;
