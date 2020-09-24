@@ -21,7 +21,9 @@ public class V_RoadView : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-            if (other.gameObject.tag.Equals("Player"))
+        Debug.Log("collision on road " + gameObject.name);
+
+        if (other.gameObject.tag.Equals("Player"))
             {
                 Debug.Log("collision on road " + gameObject.name);
 
