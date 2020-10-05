@@ -12,8 +12,28 @@ public class TrainManager : MonoBehaviour
     public Transform cameraPivot;
     public float cameraMoveSpeed = 10f;
 
+    public int numberOfCarts = 25;
+
+    public GameObject cloudPrefab;
+    public GameObject wordPrefab;
+
+    public Transform cartsParent;
+    public Transform couldsParent;
+
+    Transform[] bases;
+
+    int baseNum;
+
+    bool[] posMap;
+
+
+    private Transform[] cloudsList;
+    private Transform[] cartList;
+    private Vector3[] randomPosition;
+
+
+
     private float cartSpaceing = 13.4f;//-0.134f;
-    private int numberOfCarts;
     private bool doCenter = false;
     private int reachedIndex = 0;
 
@@ -26,12 +46,52 @@ public class TrainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        randomPosition = new Vector3[numberOfCarts];
+        posMap = new bool[numberOfCarts];
+        cloudsList = new Transform[numberOfCarts];
+        cartList = new Transform[numberOfCarts];
         cartsList = new List<Transform>();
         //m_CartColors = new M_CartColors();
         numberOfCarts = 25;//get this number from api that gives the hadeeth
-        SpawnCarts();
+              SpawnCarts(); 
+        InitBases();
+        createClouds();
+        
         InitCameraPosition();
         baseCamPosition = cameraPivot.position;
+ 
+
+
+
+    }
+
+
+    void createClouds()
+    {
+        for (int i = 0; i < numberOfCarts; i++)
+        {
+            GameObject go = Instantiate(cloudPrefab, couldsParent);
+            GameObject Text = Instantiate(wordPrefab, go.transform);
+            Text.name = (i + 1).ToString();
+            go.transform.position = new Vector3(bases[i].position.x, bases[i].position.y + 16, bases[i].position.z+4);
+            Text.transform.position = new Vector3(go.transform.position.x-2, go.transform.position.y+ 2, go.transform.position.z);// go.transform.position;
+
+            cloudsList[i] = go.transform;
+        }
+
+    }
+    void InitBases()
+    {
+        baseNum = cartsParent.childCount;
+        Debug.Log("carts " + baseNum);
+        bases = new Transform[baseNum];
+        int i = 0;
+        foreach (Transform child in cartsParent)
+        {
+            bases[i++] = child;
+            Debug.Log(i + " x: " + child.position.x + " y: " + child.position.y + " z: " + child.position.z);
+        }
+
     }
 
     void FillMatsForChildren(ref GameObject go)
@@ -95,11 +155,14 @@ public class TrainManager : MonoBehaviour
         {
 
             GameObject go = Instantiate(cartPrefab, cartParent);
-
+            
 
             FillMatsForChildren(ref go);
-            
+
+            go.name = (i + 1).ToString();
+
             go.transform.position = preGO;
+            cartList[i] = go.transform;
             cartsList.Add(go.transform);
             preGO = new Vector3(preGO.x,preGO.y,preGO.z+cartSpaceing);
         }
@@ -131,6 +194,34 @@ public class TrainManager : MonoBehaviour
         return new Vector3(cameraPivot.position.x, cameraPivot.position.y, avgZ);
     }
 
+    void RandomizePuzzle(int start,int end)
+    {
+        int i = start;
+        int cnt = 0;
+        while (i < end)
+        {
+            int rand = Random.Range(start, end);
+            if (!posMap[rand])
+            {
+                Debug.Log("once");
+                posMap[rand] = true;
+                randomPosition[i] = cloudsList[rand].position;
+                i++;
+            }
+        }
+    }
+
+    void randomClouds(int start,int end)
+    {
+        RandomizePuzzle(start, end);
+        //Debug.Log("start : " + start + " end : " + end);
+        Transform[] pos = new Transform[end - start];
+        for(int i = start; i < end; i++)
+        {
+            cloudsList[i].position = randomPosition[i];
+        }
+    }
+
     void InitCameraPosition()
     {
         List < Transform > newCartList = new List<Transform>();
@@ -138,6 +229,8 @@ public class TrainManager : MonoBehaviour
         int len = cartsList.Count;
         if (reachedIndex < len)
         {
+
+            int start = reachedIndex;
             for (int i = reachedIndex; i < len && cnt < 3; i++)
             {
                 newCartList.Add(cartsList[i]);
@@ -145,6 +238,7 @@ public class TrainManager : MonoBehaviour
                 cnt++;
                 reachedIndex = i + 1;
             }
+            randomClouds(start, reachedIndex);
             newCamPosition = CenterCamera(newCartList);
             Debug.Log("position set current :" + cameraPivot.position + " new : " + newCamPosition);
         }
@@ -153,6 +247,33 @@ public class TrainManager : MonoBehaviour
             newCamPosition = baseCamPosition;
             doCenter = true;
         }
+    }
+
+
+    public Transform CalculateDistances(Transform target, ref string place)
+    {
+        double minDist = 999999999;
+        int minI = -1;
+        for (int i = 0; i < baseNum; i++)
+        {
+            double dist = Vector3.Distance(target.transform.localPosition, bases[i].transform.localPosition);
+            if (dist <= 0.05f)
+            {
+                minDist = dist;
+                minI = i;
+            }
+            //bases[i].GetChild(0).gameObject.SetActive(false);
+        }
+        if (minI != -1)
+        {
+            Debug.Log("closest is " + bases[minI].name);
+            place = bases[minI].name;
+            return bases[minI];
+            bases[minI].GetChild(0).gameObject.SetActive(true);
+        }
+        else
+            Debug.Log("closest is none");
+        return null;
     }
 
     void UpdateCameraPos()

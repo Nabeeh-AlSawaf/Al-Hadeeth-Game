@@ -49,9 +49,7 @@ public class C_PuzzleSolve : MonoBehaviour
             puzzlePositions[i] = child.position;
             randomPosition[i++] = child;
             //Debug.Log(i + " x: " + child.position.x + " y: " + child.position.y + " z: " + child.position.z);
-
         }
-
     }
 
     void RandomizePuzzle()
