@@ -15,7 +15,7 @@ public class M_MainMenu : MonoBehaviour
             jsonResult = File.ReadAllText(Application.persistentDataPath + "//Settings.json");
             settings = JsonUtility.FromJson<Settings>(jsonResult);
 
-          //  Debug.Log(settings.ToString()); //checking what it read
+            Debug.Log(settings.ToString()); //checking what it read
         }
     }
     public static Settings SaveSettings(string json)

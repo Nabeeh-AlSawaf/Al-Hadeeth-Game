@@ -14,6 +14,7 @@ public class SoundManager : MonoBehaviour
     public static void playBackgroundMusic()
     {
         source.clip = GlobalVariables.backGroundMusic;
+        source.volume = GlobalVariables.settings.musicLevel;
         source.Play();
     }
 

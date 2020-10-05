@@ -22,6 +22,12 @@ public class V_MainMenu : MonoBehaviour
     public Toggle Arabic;
     public Toggle Graphics;
     public Slider example;
+    public Slider musicLevel;
+    public Slider SFXLevel;
+    public Slider voiceLevel;
+
+
+
     Settings settings = new Settings();
 
     #endregion
@@ -44,7 +50,11 @@ public class V_MainMenu : MonoBehaviour
             Arabic.isOn = settings.Arabic;
             Graphics.isOn = settings.Graphics;
             example.value = settings.example;
-            GlobalVariables.settings = settings;
+            musicLevel.value = settings.musicLevel;
+            SFXLevel.value = settings.SFXLevel;
+            voiceLevel.value = settings.VoiceLevel;
+
+        GlobalVariables.settings = settings;
         
     }
 
@@ -133,6 +143,9 @@ public class V_MainMenu : MonoBehaviour
          ",  \"Arabic\": " + Arabic.isOn.ToString().ToLower() +
          ",  \"Graphics\": " + Graphics.isOn.ToString().ToLower() +
          ",  \"example\":" + example.value +
+         ",  \"musicLevel\":" + musicLevel.value +
+         ",  \"SFXLevel\":" + SFXLevel.value +
+         ",  \"VoiceLevel\":" + voiceLevel.value +
          "}";
 
               //save to storage and to global vars

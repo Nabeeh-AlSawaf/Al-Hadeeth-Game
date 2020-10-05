@@ -34,6 +34,9 @@ public class V_InGameMenus : MonoBehaviour
         CurrentAction = delegate
         {
             Time.timeScale = 1;
+            if(SceneManager.GetActiveScene().name.Equals("Start"))
+                SceneManager.LoadScene("MainMenu");
+            else
             SceneManager.LoadScene("Start");
         };
         V_Confirmation.InitializeMessage(CurrentAction, "Are you sure?");
