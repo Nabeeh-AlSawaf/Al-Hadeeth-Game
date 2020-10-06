@@ -12,6 +12,7 @@ TagManager:
   - QuitButton
   - PauseButton
   - ContinueButton
+  - Cloud
   layers:
   - Default
   - TransparentFX

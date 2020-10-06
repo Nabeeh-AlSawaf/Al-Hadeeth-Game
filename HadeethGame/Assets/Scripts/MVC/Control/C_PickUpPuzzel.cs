@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class C_PickUpPuzzel : MonoBehaviour
 {
-    public float forceAmount = 3;
+    //public float forceAmount = 3;
 
     public C_PuzzleSolve puzzleSolver;
 
@@ -94,7 +94,6 @@ public class C_PickUpPuzzel : MonoBehaviour
             if (plane.Raycast(ray, out distance))
             {
                 draggingObject.position = new Vector3(ray.GetPoint(distance).x, draggingObject.position.y, ray.GetPoint(distance).z); // distance along the ray
-               
             }
             solve = puzzleSolver.CalculateDistances(draggingObject,ref pickedArea);
         }
