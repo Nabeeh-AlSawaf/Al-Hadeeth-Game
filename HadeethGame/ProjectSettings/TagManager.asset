@@ -7,6 +7,12 @@ TagManager:
   - Obstacle
   - selection
   - Canvas
+  - Startwords
+  - NOTAG
+  - QuitButton
+  - PauseButton
+  - ContinueButton
+  - Cloud
   layers:
   - Default
   - TransparentFX
